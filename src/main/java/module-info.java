@@ -10,6 +10,7 @@ module org.example.kursovaya {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.desktop;
+    requires java.sql;
 
     opens org.example.kursovaya to javafx.fxml;
     exports org.example.kursovaya;
