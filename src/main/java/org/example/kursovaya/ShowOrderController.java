@@ -1,5 +1,6 @@
 package org.example.kursovaya;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -17,5 +18,10 @@ public class ShowOrderController {
         stage.setScene(scene);
         stage.show();
         stage.setResizable(false);
+    }
+
+    public void goBack(ActionEvent actionEvent) {
+        MainWindowController.stage.show();
+        ShowOrderController.stage.close();
     }
 }

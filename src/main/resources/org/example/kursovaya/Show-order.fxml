@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.kursovaya.ShowOrderController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="435.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.kursovaya.ShowOrderController">
+   <children>
+      <TableView layoutY="38.0" prefHeight="360.0" prefWidth="600.0">
+        <columns>
+          <TableColumn prefWidth="200.0" text="Товар" />
+          <TableColumn prefWidth="200.0" text="Клиент" />
+            <TableColumn prefWidth="200.0" text="Работник" />
+        </columns>
+      </TableView>
+      <Label alignment="CENTER" text="Заказы" textAlignment="CENTER" AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button onAction="#goBack" alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="&lt;--">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+   </children>
 </AnchorPane>
