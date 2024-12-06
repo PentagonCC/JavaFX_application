@@ -39,17 +39,25 @@ public class AddClientController {
 
     public void addClient(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        DBConnectionHead dbConnectionHead = new DBConnectionHead();
         if(!nameClient.getText().isEmpty() && !patronymicClient.getText().isEmpty() && !surnameClient.getText().isEmpty() && !numberClient.getText().isEmpty()){
-            alert.setTitle("Успех");
-            alert.setHeaderText(null);
-            alert.setContentText("Клиент добавлен!");
+            if(dbConnectionHead.addClient(surnameClient.getText(), nameClient.getText(), patronymicClient.getText(), numberClient.getText())) {
+                alert.setTitle("Успех");
+                alert.setHeaderText(null);
+                alert.setContentText("Клиент добавлен!");
+                alert.showAndWait();
+                nameClient.clear();
+                patronymicClient.clear();
+                surnameClient.clear();
+                numberClient.clear();
+            }
         }
         else {
             alert.setTitle("Ошибка");
             alert.setHeaderText(null);
             alert.setContentText("Проверьте заполненность полей");
+            alert.showAndWait();
         }
-        alert.showAndWait();
     }
 
     public void goBack(ActionEvent actionEvent) {

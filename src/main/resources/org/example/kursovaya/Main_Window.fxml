@@ -44,7 +44,7 @@
             </Button>
         </items>
       </ToolBar>
-      <TableView layoutX="203.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <TableView fx:id="productTable" layoutX="203.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
         <columns>
           <TableColumn fx:id="titleProduct" text="Название" />
           <TableColumn fx:id="colorProduct" text="Цвет" />

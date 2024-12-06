@@ -16,21 +16,21 @@ public class HelloController {
     static Stage stage;
 
     @FXML
-    public void goAuthHead() throws IOException, SQLException {
+    public void goAuthHead() throws IOException {
         AuthController authController = new AuthController();
         authController.openPage();
         HelloApplication.stage.close();
     }
 
     @FXML
-        public void goAuthMilya(ActionEvent actionEvent) throws IOException, SQLException {
+        public void goAuthMilya(ActionEvent actionEvent) throws IOException {
         AuthController authController = new AuthController();
         authController.openPage();
         HelloApplication.stage.close();
     }
 
     @FXML
-        public void goAuthDekabristov(ActionEvent actionEvent) throws IOException, SQLException {
+        public void goAuthDekabristov(ActionEvent actionEvent) throws IOException{
         AuthController authController = new AuthController();
         authController.openPage();
         HelloApplication.stage.close();
