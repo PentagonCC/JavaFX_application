@@ -13,12 +13,13 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TableView layoutY="52.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="312.0" prefWidth="403.0" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="198.0" AnchorPane.topAnchor="52.0">
+      <TableView fx:id="productTable" layoutY="52.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="312.0" prefWidth="403.0" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="198.0" AnchorPane.topAnchor="52.0">
         <columns>
-          <TableColumn prefWidth="100.0" text="Название" />
-          <TableColumn prefWidth="100.0" text="Цвет" />
-            <TableColumn prefWidth="100.0" text="Толщина" />
-            <TableColumn prefWidth="100.0" text="Цена" />
+          <TableColumn fx:id="titleProduct" text="Название" />
+          <TableColumn fx:id="colorProduct" text="Цвет" />
+            <TableColumn fx:id="thicknessProduct" text="Толщина" />
+            <TableColumn fx:id="priceProduct" text="Цена" />
+            <TableColumn fx:id="quantityProduct" text="Количество" />
         </columns>
       </TableView>
       <VBox alignment="TOP_CENTER" layoutX="406.0" layoutY="52.0" prefHeight="348.0" prefWidth="195.0" spacing="15.0">
@@ -31,12 +32,12 @@
                   <Insets top="70.0" />
                </VBox.margin>
             </Label>
-            <TextField>
+            <TextField fx:id="quantityField">
                <VBox.margin>
                   <Insets left="10.0" right="10.0" />
                </VBox.margin>
             </TextField>
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="175.0" text="Добавить" />
+            <Button onAction="#addProduct" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="175.0" text="Добавить" />
          </children>
       </VBox>
       <Button onAction="#goBack" prefHeight="30.0" prefWidth="50.0" text="&lt;--">
@@ -44,5 +45,6 @@
             <Font size="15.0" />
          </font>
       </Button>
+      <Button layoutX="143.0" layoutY="364.0" mnemonicParsing="false" onAction="#showProduct" text="Обновить таблицу" AnchorPane.topAnchor="370.0" />
    </children>
 </AnchorPane>

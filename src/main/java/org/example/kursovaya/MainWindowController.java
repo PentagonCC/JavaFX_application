@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -34,6 +35,8 @@ public class MainWindowController {
     public TableColumn<Product, String> priceProduct;
     @FXML
     public TableColumn<Product, String> quantityProduct;
+    @FXML
+    public Separator separator;
 
     public static ObservableList<Product> productList = FXCollections.observableArrayList();
 
@@ -90,6 +93,6 @@ public class MainWindowController {
         stage.setTitle("ЗМК");
         stage.setScene(scene);
         stage.show();
-        stage.setResizable(false);
+        stage.setResizable(true);
     }
 }
