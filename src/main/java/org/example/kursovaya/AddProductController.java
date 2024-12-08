@@ -97,15 +97,25 @@ public class AddProductController {
     public int getProductID () throws SQLException {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         Connection connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
-        int search = productTable.getSelectionModel().getSelectedIndex();
         Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
-        int productID = 0;
+        int search = productTable.getSelectionModel().getSelectedIndex();
+        search++;
+        int productID = 1;
         if (selectedProduct != null) {
             try {
-                PreparedStatement searchID = connection.prepareStatement("SELECT product_id FROM product WHERE product_id = ?");
-                searchID.setInt(1, search);
+                String title = selectedProduct.getTitle();
+                String color = selectedProduct.getColor();
+                double thickness = selectedProduct.getThickness();
+                double price = selectedProduct.getPrice();
+                PreparedStatement searchID = connection.prepareStatement("SELECT product_id FROM product " +
+                        "WHERE title = ? AND color = ? AND thickness = ? AND price = ? AND product_id = ?");
+                searchID.setString(1, title);
+                searchID.setString(2, color);
+                searchID.setDouble(3, thickness);
+                searchID.setDouble(4, price);
+                searchID.setInt(5, search);
                 ResultSet id = searchID.executeQuery();
-                if (id.next()) {
+                while (id.next()) {
                     productID = id.getInt("product_id");
                 }
             } catch (SQLException e) {
