@@ -75,12 +75,13 @@ public class AddOrderController {
                 String product = selectedProduct.getTitle() + " " + selectedProduct.getColor() + " " + selectedProduct.getThickness() + " " +
                         selectedProduct.getPrice() + " " + quantity;
                 int clientId = selectedClient.getClientID();
+                double price = selectedProduct.getPrice();
                 try {
                     int productId = getProductID();
                     if (officeID == 3) {
                         DBConnectionHead dbConnectionHead = new DBConnectionHead();
                         int employeeId = DBConnectionHead.getCurrentEmployee();
-                        if (dbConnectionHead.addOrder(officeID, clientId, employeeId, product, productId, quantity)) {
+                        if (dbConnectionHead.addOrder(officeID, clientId, employeeId, product, productId, quantity, price)) {
                             alert.setTitle("Успех");
                             alert.setHeaderText(null);
                             alert.setContentText("Заказ создан с одной позицией, можно добавлять товар еще!");
@@ -92,7 +93,7 @@ public class AddOrderController {
                         int employeeId = DBConnectionDekabristov.getCurrentEmployee();
                         if(inHeadOffice.isSelected()){
                             DBConnectionHead dbConnectionHead = new DBConnectionHead();
-                            if (dbConnectionHead.addOrder(officeID, clientId, employeeId, product, productId, quantity)) {
+                            if (dbConnectionHead.addOrder(officeID, clientId, employeeId, product, productId, quantity, price)) {
                                 alert.setTitle("Успех");
                                 alert.setHeaderText(null);
                                 alert.setContentText("Заказ отправлен в головной офис, можно добавлять товар еще!");
@@ -100,7 +101,7 @@ public class AddOrderController {
                             }
                         }
                         else {
-                            if (dbConnectionDekabristov.addOrder(officeID, clientId, employeeId, product, productId, quantity)) {
+                            if (dbConnectionDekabristov.addOrder(officeID, clientId, employeeId, product, productId, quantity, price)) {
                                 alert.setTitle("Успех");
                                 alert.setHeaderText(null);
                                 alert.setContentText("Заказ создан с одной позицией, можно добавлять товар еще!");
@@ -113,7 +114,7 @@ public class AddOrderController {
                         int employeeId = DBConnectionMilya.getCurrentEmployee();
                         if(inHeadOffice.isSelected()){
                             DBConnectionHead dbConnectionHead = new DBConnectionHead();
-                            if (dbConnectionHead.addOrder(officeID, clientId, employeeId, product, productId, quantity)) {
+                            if (dbConnectionHead.addOrder(officeID, clientId, employeeId, product, productId, quantity, price)) {
                                 alert.setTitle("Успех");
                                 alert.setHeaderText(null);
                                 alert.setContentText("Заказ отправлен в головной офис, можно добавлять товар еще!");
@@ -121,7 +122,7 @@ public class AddOrderController {
                             }
                         }
                         else {
-                            if (dbConnectionMilya.addOrder(officeID, clientId, employeeId, product, productId, quantity)) {
+                            if (dbConnectionMilya.addOrder(officeID, clientId, employeeId, product, productId, quantity, price)) {
                                 alert.setTitle("Успех");
                                 alert.setHeaderText(null);
                                 alert.setContentText("Заказ создан с одной позицией, можно добавлять товар еще!");
@@ -159,11 +160,12 @@ public class AddOrderController {
             if(quantity <= selectedProduct.getQuantity()) {
                 String product = selectedProduct.getTitle() + " " + selectedProduct.getColor() + " " + selectedProduct.getThickness() + " " +
                         selectedProduct.getPrice() + " " + quantity;
+                double price = selectedProduct.getPrice();
                 try {
                     int productId = getProductID();
                     if (officeID == 3) {
                         DBConnectionHead dbConnectionHead = new DBConnectionHead();
-                        if (dbConnectionHead.updateOrder(product, productId, quantity)) {
+                        if (dbConnectionHead.updateOrder(product, productId, quantity, price)) {
                             alert.setTitle("Успех");
                             alert.setHeaderText(null);
                             alert.setContentText("Товар добавлен в заказ!");
@@ -172,7 +174,7 @@ public class AddOrderController {
                         quantityField.clear();
                     } else if (officeID == 2) {
                         DBConnectionDekabristov dbConnectionDekabristov = new DBConnectionDekabristov();
-                        if (dbConnectionDekabristov.updateOrder(product, productId, quantity)) {
+                        if (dbConnectionDekabristov.updateOrder(product, productId, quantity, price)) {
                             alert.setTitle("Успех");
                             alert.setHeaderText(null);
                             alert.setContentText("Товар добавлен в заказ!");
@@ -181,7 +183,7 @@ public class AddOrderController {
                         quantityField.clear();
                     } else if (officeID == 1) {
                         DBConnectionMilya dbConnectionMilya = new DBConnectionMilya();
-                        if (dbConnectionMilya.updateOrder(product, productId, quantity)) {
+                        if (dbConnectionMilya.updateOrder(product, productId, quantity, price)) {
                             alert.setTitle("Успех");
                             alert.setHeaderText(null);
                             alert.setContentText("Товар добавлен в заказ!");

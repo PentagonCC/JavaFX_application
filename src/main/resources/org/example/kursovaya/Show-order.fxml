@@ -4,24 +4,27 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="435.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.kursovaya.ShowOrderController">
+<AnchorPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.kursovaya.ShowOrderController">
    <children>
-      <TableView fx:id="tableOrder" layoutY="38.0" prefHeight="360.0" prefWidth="600.0">
-        <columns>
-          <TableColumn fx:id="product" prefWidth="200.0" text="Товар" />
-          <TableColumn fx:id="client" prefWidth="200.0" text="Клиент" />
-            <TableColumn fx:id="employee" prefWidth="200.0" text="Работник" />
-        </columns>
-      </TableView>
-      <Label alignment="CENTER" text="Заказы" textAlignment="CENTER" AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0">
+      <Label alignment="CENTER" layoutX="471.0" layoutY="18.0" text="Заказы" textAlignment="CENTER" AnchorPane.leftAnchor="471.0" AnchorPane.rightAnchor="471.0" AnchorPane.topAnchor="18.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button onAction="#goBack" alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="&lt;--">
+      <TableView fx:id="tableOrder" layoutX="1.0" layoutY="51.0" prefHeight="400.0" prefWidth="1000.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="51.0">
+        <columns>
+            <TableColumn fx:id="numOrder" prefWidth="100.0" text="Номер заказа" />
+          <TableColumn fx:id="product" prefWidth="225.0" text="Товар" />
+          <TableColumn fx:id="client" prefWidth="225.0" text="Клиент" />
+            <TableColumn fx:id="office" prefWidth="225.0" text="Адрес офиса" />
+            <TableColumn fx:id="employee" prefWidth="225.0" text="Работник" />
+        </columns>
+      </TableView>
+      <Button alignment="CENTER" mnemonicParsing="false" onAction="#goBack" prefHeight="30.0" prefWidth="50.0" text="&lt;--">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
+      <Button layoutX="447.0" layoutY="461.0" mnemonicParsing="false" onAction="#showOrder" text="Показать заказы" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
    </children>
 </AnchorPane>

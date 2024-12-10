@@ -3,6 +3,8 @@ package org.example.kursovaya;
 import javafx.scene.control.Alert;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -127,6 +129,62 @@ public class DBConnectionHead {
         }
     }
 
+    public void loadOrderFromDB(){
+        try{
+            ShowOrderController.orderList.clear();
+            String address;
+            String fioEmployee;
+            String fioClient;
+            connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
+            Statement getOrder = connection.createStatement();
+            ResultSet resultSetOrder = getOrder.executeQuery("SELECT * FROM orders");
+            while(resultSetOrder.next()){
+                int orderId = resultSetOrder.getInt("order_id");
+                int clientId = resultSetOrder.getInt("client_id");
+                int officeId = resultSetOrder.getInt("office_id");
+                int employeeId = resultSetOrder.getInt("employee_id");
+                String products = resultSetOrder.getString("products");
+                PreparedStatement getAddressOffice = connection.prepareStatement("SELECT address FROM office WHERE office_id = ?");
+                getAddressOffice.setInt(1, officeId);
+                PreparedStatement getFioEmployee = connection.prepareStatement("SELECT nameemployee, surname, patronymic FROM employee WHERE employee_id = ?");
+                getFioEmployee.setInt(1, employeeId);
+                PreparedStatement getFioClient = connection.prepareStatement("SELECT nameclient, surname, patronymic FROM client WHERE client_id = ?");
+                getFioClient.setInt(1, clientId);
+                ResultSet resultSetFioClient = getFioClient.executeQuery();
+                ResultSet resultSetAddress = getAddressOffice.executeQuery();
+                ResultSet resultSetFioEmployee = getFioEmployee.executeQuery();
+                if(resultSetAddress.next() && resultSetFioEmployee.next() && resultSetFioClient.next()){
+                    address = resultSetAddress.getString("address");
+                    fioEmployee = resultSetFioEmployee.getString("surname") + " " + resultSetFioEmployee.getString("nameemployee")
+                            + " " + resultSetFioEmployee.getString("patronymic");
+                    fioClient = resultSetFioClient.getString("surname") + " " + resultSetFioClient.getString("nameclient")
+                            + " " + resultSetFioClient.getString("patronymic");
+                    ShowOrderController.orderList.add(new Order(orderId, fioEmployee, address, fioClient, products));
+                }
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadInvoiceFromDB(){
+        try{
+            ShowInvoiceController.invoiceList.clear();
+            connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
+            Statement getInvoice = connection.createStatement();
+            ResultSet resultSetInvoice = getInvoice.executeQuery("SELECT order_id, totalprice, date FROM invoice");
+            while(resultSetInvoice.next()){
+                int orderId = resultSetInvoice.getInt("order_id");
+                double totalPrice = resultSetInvoice.getDouble("totalprice");
+                LocalDateTime dateTime = resultSetInvoice.getTimestamp("date").toLocalDateTime();
+                ShowInvoiceController.invoiceList.add(new Invoice(orderId, totalPrice, dateTime));
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public boolean addClient(String surname, String name, String patronymic, String number){
         boolean flag = false;
         try {
@@ -146,7 +204,6 @@ public class DBConnectionHead {
                 alert.setHeaderText(null);
                 alert.setContentText("Введите корректный номер");
                 alert.showAndWait();
-                flag = false;
             }
             connection.close();
 
@@ -180,9 +237,11 @@ public class DBConnectionHead {
         return matcher.matches();
     }
 
-    public boolean addOrder(int officeId, int clientId, int employeeId, String product, int productId, int quantity) {
+    public boolean addOrder(int officeId, int clientId, int employeeId, String product, int productId, int quantity, double price) {
         boolean flag = false;
         String jsonProduct = "\"" + product + "\"";
+        double totalPrice = price * quantity;
+        LocalDateTime dateTime = LocalDateTime.now();
         try {
             connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
             PreparedStatement addOrder = connection.prepareStatement("INSERT INTO orders (office_id, client_id, employee_id, products) VALUES (?, ?, ?, ?::jsonb) RETURNING order_id ");
@@ -194,6 +253,12 @@ public class DBConnectionHead {
             if(resultSetId.next()){
                currentOrder = resultSetId.getInt("order_id");
             }
+            PreparedStatement addInvoice = connection.prepareStatement("INSERT INTO invoice (order_id, totalprice, date) VALUES (?, ?, ?)");
+            addInvoice.setInt(1, currentOrder);
+            addInvoice.setDouble(2, totalPrice);
+            addInvoice.setTimestamp(3, Timestamp.valueOf(dateTime));
+            int changeRow = addInvoice.executeUpdate();
+
             PreparedStatement updateQuantity = connection.prepareStatement("UPDATE warehouse SET quantity = quantity - ? WHERE product_id = ?");
             updateQuantity.setInt(1, quantity);
             updateQuantity.setInt(2, productId);
@@ -205,9 +270,11 @@ public class DBConnectionHead {
         return flag;
     }
 
-    public boolean updateOrder(String product, int productId, int quantity) {
+    public boolean updateOrder(String product, int productId, int quantity, double price) {
         boolean flag = false;
         String jsonProduct = "\"" + product + "\"";
+        double totalPrice = price * quantity;
+        LocalDateTime dateTime = LocalDateTime.now();
         try{
             connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
             PreparedStatement updateOrder = connection.prepareStatement("UPDATE orders SET products = products || ?::jsonb WHERE order_id = ?");
@@ -216,8 +283,13 @@ public class DBConnectionHead {
             PreparedStatement updateQuantity = connection.prepareStatement("UPDATE warehouse SET quantity = quantity - ? WHERE product_id = ?");
             updateQuantity.setInt(1, quantity);
             updateQuantity.setInt(2, productId);
+            PreparedStatement updateInvoice = connection.prepareStatement("UPDATE invoice SET totalprice = totalprice + ?, date = ? WHERE order_id = ?");
+            updateInvoice.setDouble(1, totalPrice);
+            updateInvoice.setTimestamp(2, Timestamp.valueOf(dateTime));
+            updateInvoice.setInt(3, currentOrder);
             int upRow = updateQuantity.executeUpdate();
             int countRow = updateOrder.executeUpdate();
+            int changeRow= updateInvoice.executeUpdate();
             flag = true;
         }catch (SQLException e){
             throw new RuntimeException(e);

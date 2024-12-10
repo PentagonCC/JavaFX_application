@@ -6,11 +6,12 @@
 
 <AnchorPane prefHeight="435.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.kursovaya.ShowInvoiceController">
    <children>
-      <TableView layoutY="41.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="600.0">
+      <Button onAction="#showInvoice" layoutX="274.0" layoutY="401.0" mnemonicParsing="false" text="Загрузить накладные" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="405.0" />
+      <TableView fx:id="invoiceTable" layoutY="41.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="600.0">
         <columns>
-          <TableColumn prefWidth="200.0" text="Заказ" />
-          <TableColumn prefWidth="200.0" text="Полная сумма" />
-            <TableColumn prefWidth="200.0" text="Дата" />
+          <TableColumn fx:id="numberOrder" prefWidth="200.0" text="Номер заказа" />
+          <TableColumn fx:id="totalPrice" prefWidth="200.0" text="Полная сумма" />
+            <TableColumn fx:id="dateTime" prefWidth="200.0" text="Дата" />
         </columns>
       </TableView>
       <Label alignment="CENTER" text="Накладные" AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="10.0">
@@ -18,7 +19,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button onAction="#goBack" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="&lt;--" textAlignment="CENTER">
+      <Button layoutY="-1.0" mnemonicParsing="false" onAction="#goBack" prefHeight="30.0" prefWidth="50.0" text="&lt;--" textAlignment="CENTER">
          <font>
             <Font size="15.0" />
          </font></Button>

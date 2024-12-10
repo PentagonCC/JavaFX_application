@@ -10,13 +10,54 @@ public class Order {
     private final SimpleIntegerProperty clientId;
     private final SimpleIntegerProperty employeeId;
     private final SimpleStringProperty products;
+    private final SimpleStringProperty fioEmployee;
+    private final SimpleStringProperty officeAddress;
+    private final SimpleStringProperty fioClient;
 
-    public Order(int orderId, int officeId, int clientId, int employeeId, String products){
+    public Order(int orderId, int officeId, int clientId, int employeeId, String products) {
         this.orderId = new SimpleIntegerProperty(orderId);
         this.officeId = new SimpleIntegerProperty(officeId);
         this.clientId = new SimpleIntegerProperty(clientId);
         this.employeeId = new SimpleIntegerProperty(employeeId);
         this.products = new SimpleStringProperty(products);
+        this.fioEmployee = new SimpleStringProperty("");
+        this.officeAddress = new SimpleStringProperty("");
+        this.fioClient = new SimpleStringProperty("");
+    }
+
+    public Order(int orderId, String fioEmployee, String officeAddress, String fioClient, String products) {
+        this.officeId = new SimpleIntegerProperty(0);
+        this.clientId = new SimpleIntegerProperty(0);
+        this.employeeId = new SimpleIntegerProperty(0);
+        this.orderId = new SimpleIntegerProperty(orderId);
+        this.products = new SimpleStringProperty(products);
+        this.fioEmployee = new SimpleStringProperty(fioEmployee);
+        this.officeAddress = new SimpleStringProperty(officeAddress);
+        this.fioClient = new SimpleStringProperty(fioClient);
+    }
+
+    public String getFIOEmployee(){
+        return fioEmployee.get();
+    }
+
+    public SimpleStringProperty fioEmployeeProperty(){
+        return  fioEmployee;
+    }
+
+    public String getOfficeAddress(){
+        return officeAddress.get();
+    }
+
+    public SimpleStringProperty officeAddressProperty(){
+        return  officeAddress;
+    }
+
+    public String getFIOClient(){
+        return fioClient.get();
+    }
+
+    public SimpleStringProperty fioClientProperty(){
+        return fioClient;
     }
 
     public int getOrderId(){
