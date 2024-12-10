@@ -238,7 +238,6 @@ public class DBConnectionDekabristov {
         }
     }
 
-
     public boolean addProduct(int quantity, int productID){
         boolean flag = false;
         try {

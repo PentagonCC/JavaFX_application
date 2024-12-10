@@ -57,6 +57,9 @@ public class AddOrderController {
         stage.setScene(scene);
         stage.show();
         stage.setResizable(false);
+        if(AuthController.getCurrentOffice() == 3){
+            inHeadOffice.setVisible(false);
+        }
     }
 
     public void goBack(ActionEvent actionEvent) {
