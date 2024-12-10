@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.example.kursovaya.DBConnectionHead.*;
 
@@ -51,20 +50,23 @@ public class AddProductController {
     }
 
     public void showProduct() {
-        try {
+        int officeID = AuthController.getCurrentOffice();
+        titleProduct.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colorProduct.setCellValueFactory(new PropertyValueFactory<>("color"));
+        thicknessProduct.setCellValueFactory(new PropertyValueFactory<>("thickness"));
+        priceProduct.setCellValueFactory(new PropertyValueFactory<>("price"));
+        quantityProduct.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        if (officeID == 3) {
             DBConnectionHead dbConnectionHead = new DBConnectionHead();
-            dbConnectionHead.headOfficeConnection();
-            titleProduct.setCellValueFactory(new PropertyValueFactory<>("title"));
-            colorProduct.setCellValueFactory(new PropertyValueFactory<>("color"));
-            thicknessProduct.setCellValueFactory(new PropertyValueFactory<>("thickness"));
-            priceProduct.setCellValueFactory(new PropertyValueFactory<>("price"));
-            quantityProduct.setCellValueFactory(new PropertyValueFactory<>("quantity"));
             dbConnectionHead.loadAddProductFromDB();
-            productTable.setItems(productList);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } else if (officeID == 2) {
+            DBConnectionDekabristov dbConnectionDekabristov = new DBConnectionDekabristov();
+            dbConnectionDekabristov.loadAddProductFromDB();
+        } else if (officeID == 1) {
+            DBConnectionMilya dbConnectionMilya = new DBConnectionMilya();
+            dbConnectionMilya.loadAddProductFromDB();
         }
+        productTable.setItems(productList);
     }
 
     public void goBack(ActionEvent actionEvent) {
@@ -74,15 +76,36 @@ public class AddProductController {
 
     public void addProduct(ActionEvent actionEvent) throws SQLException {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        DBConnectionHead dbConnectionHead = new DBConnectionHead();
+        int officeID = AuthController.getCurrentOffice();
         if(!quantityField.getText().isEmpty()){
             int productID = getProductID();
-            int quantity = Integer.parseInt(quantityField.getText());
-            if(dbConnectionHead.addProduct(quantity, productID)){
-                alert.setTitle("Успех");
-                alert.setHeaderText(null);
-                alert.setContentText("Товар добавлен!");
-                alert.showAndWait();
+            if(productID != 0) {
+                int quantity = Integer.parseInt(quantityField.getText());
+                if(officeID == 3) {
+                    DBConnectionHead dbConnectionHead = new DBConnectionHead();
+                    if (dbConnectionHead.addProduct(quantity, productID)) {
+                        alert.setTitle("Успех");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Товар добавлен!");
+                        alert.showAndWait();
+                    }
+                }else if (officeID == 2){
+                    DBConnectionDekabristov dbConnectionDekabristov = new DBConnectionDekabristov();
+                    if(dbConnectionDekabristov.addProduct(quantity, productID)){
+                        alert.setTitle("Успех");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Товар добавлен!");
+                        alert.showAndWait();
+                    }
+                }else if (officeID == 1){
+                    DBConnectionMilya dbConnectionMilya = new DBConnectionMilya();
+                    if(dbConnectionMilya.addProduct(quantity,productID)){
+                        alert.setTitle("Успех");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Товар добавлен!");
+                        alert.showAndWait();
+                    }
+                }
                 quantityField.clear();
             }
         }
@@ -98,9 +121,7 @@ public class AddProductController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         Connection connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
         Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
-        int search = productTable.getSelectionModel().getSelectedIndex();
-        search++;
-        int productID = 1;
+        int productID = 0;
         if (selectedProduct != null) {
             try {
                 String title = selectedProduct.getTitle();
@@ -108,18 +129,23 @@ public class AddProductController {
                 double thickness = selectedProduct.getThickness();
                 double price = selectedProduct.getPrice();
                 PreparedStatement searchID = connection.prepareStatement("SELECT product_id FROM product " +
-                        "WHERE title = ? AND color = ? AND thickness = ? AND price = ? AND product_id = ?");
-                searchID.setString(1, title);
-                searchID.setString(2, color);
+                        "WHERE color = ? AND price = ? AND thickness = ? AND title = ?");
+                searchID.setString(4, title);
+                searchID.setString(1, color);
                 searchID.setDouble(3, thickness);
-                searchID.setDouble(4, price);
-                searchID.setInt(5, search);
+                searchID.setDouble(2, price);
                 ResultSet id = searchID.executeQuery();
-                while (id.next()) {
+                if (id.next()) {
                     productID = id.getInt("product_id");
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
+            }
+            if(productID == 0) {
+                alert.setTitle("Ошибка");
+                alert.setHeaderText(null);
+                alert.setContentText("Товар не найден");
+                alert.showAndWait();
             }
         } else {
             alert.setTitle("Ошибка");

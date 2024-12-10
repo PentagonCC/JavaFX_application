@@ -59,20 +59,23 @@ public class MainWindowController {
     }
 
     public void showProduct(ActionEvent actionEvent) {
-        try {
+        int officeID = AuthController.getCurrentOffice();
+        titleProduct.setCellValueFactory(new PropertyValueFactory<>("title"));
+        colorProduct.setCellValueFactory(new PropertyValueFactory<>("color"));
+        thicknessProduct.setCellValueFactory(new PropertyValueFactory<>("thickness"));
+        priceProduct.setCellValueFactory(new PropertyValueFactory<>("price"));
+        quantityProduct.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        if (officeID == 3) {
             DBConnectionHead dbConnectionHead = new DBConnectionHead();
-            dbConnectionHead.headOfficeConnection();
-            titleProduct.setCellValueFactory(new PropertyValueFactory<>("title"));
-            colorProduct.setCellValueFactory(new PropertyValueFactory<>("color"));
-            thicknessProduct.setCellValueFactory(new PropertyValueFactory<>("thickness"));
-            priceProduct.setCellValueFactory(new PropertyValueFactory<>("price"));
-            quantityProduct.setCellValueFactory(new PropertyValueFactory<>("quantity"));
             dbConnectionHead.loadProductFromDB();
-            productTable.setItems(productList);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } else if (officeID == 2) {
+            DBConnectionDekabristov dbConnectionDekabristov = new DBConnectionDekabristov();
+            dbConnectionDekabristov.loadProductFromDB();
+        } else if (officeID == 1) {
+            DBConnectionMilya dbConnectionMilya = new DBConnectionMilya();
+            dbConnectionMilya.loadProductFromDB();
         }
+        productTable.setItems(productList);
     }
 
     public void showOrder(ActionEvent actionEvent) throws IOException {

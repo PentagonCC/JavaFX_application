@@ -16,17 +16,12 @@ public class AddClientController {
 
     @FXML
     private TextField nameClient;
-
     @FXML
     private TextField surnameClient;
-
     @FXML
     private TextField patronymicClient;
-
     @FXML
     private TextField numberClient;
-
-
 
     public void openPage() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("Add-client.fxml"));
@@ -39,17 +34,44 @@ public class AddClientController {
 
     public void addClient(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        DBConnectionHead dbConnectionHead = new DBConnectionHead();
+        int currentOffice = AuthController.getCurrentOffice();
         if(!nameClient.getText().isEmpty() && !patronymicClient.getText().isEmpty() && !surnameClient.getText().isEmpty() && !numberClient.getText().isEmpty()){
-            if(dbConnectionHead.addClient(surnameClient.getText(), nameClient.getText(), patronymicClient.getText(), numberClient.getText())) {
-                alert.setTitle("Успех");
-                alert.setHeaderText(null);
-                alert.setContentText("Клиент добавлен!");
-                alert.showAndWait();
-                nameClient.clear();
-                patronymicClient.clear();
-                surnameClient.clear();
-                numberClient.clear();
+            if(currentOffice == 3) {
+                DBConnectionHead dbConnectionHead = new DBConnectionHead();
+                if (dbConnectionHead.addClient(surnameClient.getText(), nameClient.getText(), patronymicClient.getText(), numberClient.getText())) {
+                    alert.setTitle("Успех");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Клиент добавлен!");
+                    alert.showAndWait();
+                    nameClient.clear();
+                    patronymicClient.clear();
+                    surnameClient.clear();
+                    numberClient.clear();
+                }
+            } else if (currentOffice == 2) {
+                DBConnectionDekabristov dbConnectionDekabristov = new DBConnectionDekabristov();
+                if (dbConnectionDekabristov.addClient(surnameClient.getText(), nameClient.getText(), patronymicClient.getText(), numberClient.getText())) {
+                    alert.setTitle("Успех");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Клиент добавлен!");
+                    alert.showAndWait();
+                    nameClient.clear();
+                    patronymicClient.clear();
+                    surnameClient.clear();
+                    numberClient.clear();
+                }
+            }else if (currentOffice == 1){
+                DBConnectionMilya dbConnectionMilya = new DBConnectionMilya();
+                if (dbConnectionMilya.addClient(surnameClient.getText(), nameClient.getText(), patronymicClient.getText(), numberClient.getText())) {
+                    alert.setTitle("Успех");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Клиент добавлен!");
+                    alert.showAndWait();
+                    nameClient.clear();
+                    patronymicClient.clear();
+                    surnameClient.clear();
+                    numberClient.clear();
+                }
             }
         }
         else {

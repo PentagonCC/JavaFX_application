@@ -20,11 +20,22 @@ public class AuthController {
     @FXML
     public TextField passwordEmployee;
 
+    private static int currentOffice;
+
+    public static int getCurrentOffice() {
+        return currentOffice;
+    }
+
+
     public void goMainContent() throws IOException {
         try {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             DBConnectionHead dbConnection = new DBConnectionHead();
+            DBConnectionMilya dbConnectionMilya = new DBConnectionMilya();
+            DBConnectionDekabristov dbConnectionDekabristov = new DBConnectionDekabristov();
             dbConnection.headOfficeConnection();
+            dbConnectionMilya.milyaDBConnection();
+            dbConnectionDekabristov.dekabristovDBConnection();
             String email = emailEmployee.getText();
             String password = passwordEmployee.getText();
             if(email.isEmpty() || password.isEmpty()){
@@ -35,10 +46,22 @@ public class AuthController {
             }
             else {
                 if (dbConnection.checkEmployee(email, password)) {
+                    currentOffice = 3;
                     MainWindowController mainPage = new MainWindowController();
                     mainPage.openPage();
                     AuthController.stage.close();
-                } else {
+                } else if (dbConnectionMilya.checkEmployee(email, password)) {
+                    currentOffice = 1;
+                    MainWindowController mainPage = new MainWindowController();
+                    mainPage.openPage();
+                    AuthController.stage.close();
+                } else if (dbConnectionDekabristov.checkEmployee(email,password)) {
+                    currentOffice = 2;
+                    MainWindowController mainPage = new MainWindowController();
+                    mainPage.openPage();
+                    AuthController.stage.close();
+                }
+                else {
                     alert.setTitle("Ошибка данных");
                     alert.setHeaderText(null);
                     alert.setContentText("Неверный логин или пароль");
