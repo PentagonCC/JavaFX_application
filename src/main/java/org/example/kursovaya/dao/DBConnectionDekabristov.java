@@ -1,21 +1,25 @@
-package org.example.kursovaya;
+package org.example.kursovaya.dao;
 
 import javafx.scene.control.Alert;
+import org.example.kursovaya.model.Client;
+import org.example.kursovaya.model.Invoice;
+import org.example.kursovaya.model.Order;
+import org.example.kursovaya.model.Product;
+import org.example.kursovaya.controller.*;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DBConnectionMilya {
+public class DBConnectionDekabristov {
 
     static final String DB_URL_HEAD = "jdbc:postgresql://localhost:5432/headOffice";
-    static final String DB_URL_MILYA = "jdbc:postgresql://localhost:5432/milya";
+    static final String DB_URL_DEKABRISTOV = "jdbc:postgresql://localhost:5432/dekabristov";
     static final String USER = "postgres";
     static final String PASS = "1234";
     static Connection connection;
     static Connection connectionMain;
-
     private static int currentEmployee;
     private static int currentOrder;
 
@@ -27,8 +31,8 @@ public class DBConnectionMilya {
         return currentEmployee;
     }
 
-    public void milyaDBConnection () throws SQLException {
-        Connection connection = DriverManager.getConnection(DB_URL_MILYA, USER, PASS);
+    public void dekabristovDBConnection () throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL_DEKABRISTOV, USER, PASS);
         Connection connection1 = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
     }
 
@@ -41,7 +45,7 @@ public class DBConnectionMilya {
             int id = resultSet.getInt("office_id");
             String email = resultSet.getString("email");
             String password = resultSet.getString("passwordemployee");
-            if(emailFieldText.equals(email) && passwordFieldText.equals(password) && id == 1){
+            if(emailFieldText.equals(email) && passwordFieldText.equals(password) && id == 2){
                 currentEmployee = resultSet.getInt("employee_id");
                 checkFlag =true;
             }
@@ -55,7 +59,7 @@ public class DBConnectionMilya {
         try {
             connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
             if(phoneValidation(number)){
-                PreparedStatement addClient = connection.prepareStatement("INSERT INTO client (office_id, nameclient, surname, patronymic, numberclient) VALUES (1, ?, ?, ?, ?)");
+                PreparedStatement addClient = connection.prepareStatement("INSERT INTO client (office_id, nameclient, surname, patronymic, numberclient) VALUES (2, ?, ?, ?, ?)");
                 addClient.setString(1, name);
                 addClient.setString(2, surname);
                 addClient.setString(3, patronymic);
@@ -91,7 +95,7 @@ public class DBConnectionMilya {
         try {
             MainWindowController.productList.clear();
             connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
-            connectionMain = DriverManager.getConnection(DB_URL_MILYA, USER, PASS);
+            connectionMain = DriverManager.getConnection(DB_URL_DEKABRISTOV, USER, PASS);
             Statement getProduct = connection.createStatement();
             ResultSet resultSetProduct = getProduct.executeQuery("SELECT product_id, color, thickness, price, title FROM product");
             while (resultSetProduct.next()){
@@ -115,51 +119,12 @@ public class DBConnectionMilya {
         }
     }
 
-    public void loadOrderFromDB(){
-        try{
-            ShowOrderController.orderList.clear();
-            String address;
-            String fioEmployee;
-            String fioClient;
-            connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
-            connectionMain = DriverManager.getConnection(DB_URL_MILYA, USER, PASS);
-            Statement getOrder = connectionMain.createStatement();
-            ResultSet resultSetOrder = getOrder.executeQuery("SELECT * FROM orders");
-            while(resultSetOrder.next()){
-                int orderId = resultSetOrder.getInt("order_id");
-                int clientId = resultSetOrder.getInt("client_id");
-                int officeId = resultSetOrder.getInt("office_id");
-                int employeeId = resultSetOrder.getInt("employee_id");
-                String products = resultSetOrder.getString("products");
-                PreparedStatement getAddressOffice = connection.prepareStatement("SELECT address FROM office WHERE office_id = ?");
-                getAddressOffice.setInt(1, officeId);
-                PreparedStatement getFioEmployee = connection.prepareStatement("SELECT nameemployee, surname, patronymic FROM employee WHERE employee_id = ?");
-                getFioEmployee.setInt(1, employeeId);
-                PreparedStatement getFioClient = connection.prepareStatement("SELECT nameclient, surname, patronymic FROM client WHERE client_id = ?");
-                getFioClient.setInt(1, clientId);
-                ResultSet resultSetFioClient = getFioClient.executeQuery();
-                ResultSet resultSetAddress = getAddressOffice.executeQuery();
-                ResultSet resultSetFioEmployee = getFioEmployee.executeQuery();
-                if(resultSetAddress.next() && resultSetFioEmployee.next() && resultSetFioClient.next()){
-                    address = resultSetAddress.getString("address");
-                    fioEmployee = resultSetFioEmployee.getString("surname") + " " + resultSetFioEmployee.getString("nameemployee")
-                            + " " + resultSetFioEmployee.getString("patronymic");
-                    fioClient = resultSetFioClient.getString("surname") + " " + resultSetFioClient.getString("nameclient")
-                            + " " + resultSetFioClient.getString("patronymic");
-                    ShowOrderController.orderList.add(new Order(orderId, fioEmployee, address, fioClient, products));
-                }
-            }
-        }catch (SQLException e){
-            throw new RuntimeException(e);
-        }
-    }
-
     public void loadAddProductFromDB() {
         try {
             AddProductController.productList.clear();
             AddOrderController.clientList.clear();
             connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
-            connectionMain = DriverManager.getConnection(DB_URL_MILYA, USER, PASS);
+            connectionMain = DriverManager.getConnection(DB_URL_DEKABRISTOV, USER, PASS);
             Statement getProduct = connection.createStatement();
             ResultSet resultSetProduct = getProduct.executeQuery("SELECT product_id, color, thickness, price, title FROM product");
             while (resultSetProduct.next()){
@@ -188,7 +153,7 @@ public class DBConnectionMilya {
             AddOrderController.productList.clear();
             AddOrderController.clientList.clear();
             connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
-            connectionMain = DriverManager.getConnection(DB_URL_MILYA, USER, PASS);
+            connectionMain = DriverManager.getConnection(DB_URL_DEKABRISTOV, USER, PASS);
             Statement getProduct = connection.createStatement();
             Statement getClient = connection.createStatement();
             ResultSet resultSetClient = getClient.executeQuery("SELECT * FROM client");
@@ -223,10 +188,48 @@ public class DBConnectionMilya {
         }
     }
 
+    public void loadOrderFromDB(){
+        try{
+            ShowOrderController.orderList.clear();
+            String address;
+            String fioEmployee;
+            String fioClient;
+            connection = DriverManager.getConnection(DB_URL_HEAD, USER, PASS);
+            connectionMain = DriverManager.getConnection(DB_URL_DEKABRISTOV, USER, PASS);
+            Statement getOrder = connectionMain.createStatement();
+            ResultSet resultSetOrder = getOrder.executeQuery("SELECT * FROM orders");
+            while(resultSetOrder.next()){
+                int orderId = resultSetOrder.getInt("order_id");
+                int clientId = resultSetOrder.getInt("client_id");
+                int officeId = resultSetOrder.getInt("office_id");
+                int employeeId = resultSetOrder.getInt("employee_id");
+                String products = resultSetOrder.getString("products");
+                PreparedStatement getAddressOffice = connection.prepareStatement("SELECT address FROM office WHERE office_id = ?");
+                getAddressOffice.setInt(1, officeId);
+                PreparedStatement getFioEmployee = connection.prepareStatement("SELECT nameemployee, surname, patronymic FROM employee WHERE employee_id = ?");
+                getFioEmployee.setInt(1, employeeId);
+                PreparedStatement getFioClient = connection.prepareStatement("SELECT nameclient, surname, patronymic FROM client WHERE client_id = ?");
+                getFioClient.setInt(1, clientId);
+                ResultSet resultSetFioClient = getFioClient.executeQuery();
+                ResultSet resultSetAddress = getAddressOffice.executeQuery();
+                ResultSet resultSetFioEmployee = getFioEmployee.executeQuery();
+                if(resultSetAddress.next() && resultSetFioEmployee.next() && resultSetFioClient.next()){
+                    address = resultSetAddress.getString("address");
+                    fioEmployee = resultSetFioEmployee.getString("surname") + " " + resultSetFioEmployee.getString("nameemployee")
+                            + " " + resultSetFioEmployee.getString("patronymic");
+                    fioClient = resultSetFioClient.getString("surname") + " " + resultSetFioClient.getString("nameclient")
+                            + " " + resultSetFioClient.getString("patronymic");
+                    ShowOrderController.orderList.add(new Order(orderId, fioEmployee, address, fioClient, products));
+                }
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
     public void loadInvoiceFromDB(){
         try{
             ShowInvoiceController.invoiceList.clear();
-            connection = DriverManager.getConnection(DB_URL_MILYA, USER, PASS);
+            connection = DriverManager.getConnection(DB_URL_DEKABRISTOV, USER, PASS);
             Statement getInvoice = connection.createStatement();
             ResultSet resultSetInvoice = getInvoice.executeQuery("SELECT order_id, totalprice, date FROM invoice");
             while(resultSetInvoice.next()){
@@ -243,7 +246,7 @@ public class DBConnectionMilya {
     public boolean addProduct(int quantity, int productID){
         boolean flag = false;
         try {
-            connection = DriverManager.getConnection(DB_URL_MILYA, USER, PASS);
+            connection = DriverManager.getConnection(DB_URL_DEKABRISTOV, USER, PASS);
             PreparedStatement addProduct = connection.prepareStatement("UPDATE warehouse SET quantity = quantity + ? WHERE product_id = ?");
             addProduct.setInt(1, quantity);
             addProduct.setInt(2, productID);
@@ -263,8 +266,8 @@ public class DBConnectionMilya {
         double totalPrice = price * quantity;
         LocalDateTime dateTime = LocalDateTime.now();
         try {
-            connection = DriverManager.getConnection(DB_URL_MILYA, USER, PASS);
-            PreparedStatement addOrder = connection.prepareStatement("INSERT INTO orders (office_id, client_id, employee_id, products) VALUES (?, ?, ?, ?::jsonb) RETURNING order_id ");
+            connection = DriverManager.getConnection(DB_URL_DEKABRISTOV, USER, PASS);
+            PreparedStatement addOrder = connection.prepareStatement("INSERT INTO orders (office_id, client_id, employee_id, products) VALUES (?, ?, ?, ?::jsonb) RETURNING order_id");
             addOrder.setInt(1, officeId);
             addOrder.setInt(2, clientId);
             addOrder.setInt(3, employeeId);
@@ -296,7 +299,7 @@ public class DBConnectionMilya {
         double totalPrice = price * quantity;
         LocalDateTime dateTime = LocalDateTime.now();
         try{
-            connection = DriverManager.getConnection(DB_URL_MILYA, USER, PASS);
+            connection = DriverManager.getConnection(DB_URL_DEKABRISTOV, USER, PASS);
             PreparedStatement updateOrder = connection.prepareStatement("UPDATE orders SET products = products || ?::jsonb WHERE order_id = ?");
             updateOrder.setInt(2, currentOrder);
             updateOrder.setString(1, jsonProduct);
@@ -317,4 +320,3 @@ public class DBConnectionMilya {
         return flag;
     }
 }
-

@@ -1,4 +1,4 @@
-package org.example.kursovaya;
+package org.example.kursovaya.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -6,6 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.example.kursovaya.dao.DBConnectionDekabristov;
+import org.example.kursovaya.dao.DBConnectionHead;
+import org.example.kursovaya.dao.DBConnectionMilya;
+import org.example.kursovaya.HelloApplication;
 
 
 import java.io.IOException;

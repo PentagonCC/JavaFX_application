@@ -1,4 +1,4 @@
-package org.example.kursovaya;
+package org.example.kursovaya.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,11 +12,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.example.kursovaya.*;
+import org.example.kursovaya.dao.DBConnectionDekabristov;
+import org.example.kursovaya.dao.DBConnectionHead;
+import org.example.kursovaya.dao.DBConnectionMilya;
+import org.example.kursovaya.model.Product;
 
 import java.io.IOException;
 import java.sql.*;
 
-import static org.example.kursovaya.DBConnectionHead.*;
+import static org.example.kursovaya.dao.DBConnectionHead.*;
 
 public class AddProductController {
     static Stage stage = new Stage();

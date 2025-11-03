@@ -14,4 +14,10 @@ module org.example.kursovaya {
 
     opens org.example.kursovaya to javafx.fxml;
     exports org.example.kursovaya;
+    exports org.example.kursovaya.controller;
+    opens org.example.kursovaya.controller to javafx.fxml;
+    exports org.example.kursovaya.dao;
+    opens org.example.kursovaya.dao to javafx.fxml;
+    exports org.example.kursovaya.model;
+    opens org.example.kursovaya.model to javafx.fxml;
 }

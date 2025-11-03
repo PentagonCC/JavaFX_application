@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.kursovaya.AddProductController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.kursovaya.controller.AddProductController">
    <children>
       <Separator layoutX="400.0" layoutY="52.0" orientation="VERTICAL" prefHeight="200.0" style="-fx-background-color: #CCCC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="194.0" AnchorPane.topAnchor="52.0" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="249.0" layoutY="14.0" text="Приход товара" textAlignment="CENTER">

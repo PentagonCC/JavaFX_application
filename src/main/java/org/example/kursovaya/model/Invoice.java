@@ -1,4 +1,4 @@
-package org.example.kursovaya;
+package org.example.kursovaya.model;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
